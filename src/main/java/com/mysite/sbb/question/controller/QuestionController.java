@@ -27,11 +27,12 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
+    //@ResponseBody //첫번 째 데이터 값 보내기
     public String list(Model model,
-                       @RequestParam(value = "page", defaultValue = "0") int page) {
+                       @RequestParam(value = "page", defaultValue = "0") int page){
         Page<Question> paging = questionService.getList(page);
-        log.info("================================> paging : {}", paging);
-        model.addAttribute("paging", paging); // HTML의 ${paging}과 이름 일치
+        log.info("================================> list : {}", paging);
+        model.addAttribute("paging", paging); // "list" -> "paging"으로 수정
         return "question/list";
     }
 
