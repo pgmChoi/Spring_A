@@ -22,7 +22,9 @@
 
                 <div class="card-body p-4">
 
-                    <form th:action="@{/question/create}" th:object="${questionDto}" method="post">
+                    <form th:action="@{/question/create}"
+                          th:object="${questionDto}"
+                          method="post">
 
                         <!-- 제목 -->
                         <div class="mb-4">
@@ -33,8 +35,8 @@
                                    id="subject"
                                    name="subject"
                                    class="form-control"
-                                   th:fieled="*{subject}"
                                    placeholder="질문 제목을 입력하세요."
+                                   th:field="*{subject}"
                             >
                             <p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}" class="fieldError">error</p>
                         </div>
@@ -48,7 +50,7 @@
                                       name="content"
                                       class="form-control"
                                       rows="8"
-                                      th:fieled="*{content}"
+                                      th:field="*{content}"
                                       placeholder="질문 내용을 입력하세요."
                                       ></textarea>
                             <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="fieldError">error</p>
