@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,8 @@ public class QuestionService {
     private final QuestionRepository questionRepository; //final 안쓰면 생성자 안생김
 
     public Page<Question> getList(int page) {
-        PageRequest pageable = PageRequest.of(page, 10);
+        //PageRequest pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "created");
+        PageRequest pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("created")));
         Page<Question> paging = questionRepository.findAll(pageable);
         return paging;
     }
