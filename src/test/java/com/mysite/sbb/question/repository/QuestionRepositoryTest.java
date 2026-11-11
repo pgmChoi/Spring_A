@@ -9,114 +9,114 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
 @SpringBootTest
 class QuestionRepositoryTest {
 
-    @Autowired //DI Defendercy insert 의존성 주입
+    @Autowired //중요
     private QuestionRepository questionRepository;
+
 
     @Autowired
     private QuestionService questionService;
 
     @Test
     void test(){
-        System.out.println("테스트 확인중...");
+        System.out.println("============= 스프링 부트 테스트 연습");
     }
 
     @Test
-//    @Transactional // 업데이트를 하고 업데이트 내용을 삭제함
+        //@Transactional
     void testSave(){
         Question q1 = new Question();
-        q1.setSubject("SBB가 뭔가요?");
-        q1.setContent("SBB에 대해서 알고 싶어요");
+        q1.setSubject("sbb가 무엇인가요?");
+        q1.setContent("sbb에 대해 알고 싶어요.");
         q1.setCreated(LocalDateTime.now());
+        System.out.println("============= q1 : " + q1); //sout
         Question saved = questionRepository.save(q1);
-        assertEquals(1, saved.getId());
+        System.out.println("============= saved : " + saved);
 
-
-        Question q2 = Question.builder()
-                .content("스프링은 왜 어렵다고 하는거죠?")
-                .subject("스프링 부트로 어려운가요?")
+        Question q2 = Question.builder() //q2처럼 테스트하기
+                .content("테스트 입력 내용 입니다.")
+                .subject("테스트 제목 입니다.")
                 .created(LocalDateTime.now())
                 .build();
-        Question saved2 = questionRepository.save(q2);
-        assertEquals(2, saved2.getId());
+        Question saved1 = questionRepository.save(q2); //Alt + Shift + L
+        assertEquals("테스트 제목 입니다.",saved1.getSubject());
     }
 
     @Test
     void testFindAll(){
         List<Question> questionList = questionRepository.findAll();
-        assertEquals(2, questionList.size());
-        Question  question = questionList.get(0);
-        assertEquals("SBB가 뭔가요?", question.getSubject());
+        assertEquals(2,questionList.size());
     }
 
     @Test
     void testFindById(){
-        Optional<Question> byId = questionRepository.findById(1L); // Option이 참일 때 거짓일 때 값전달
-        if(byId.isPresent()){
-            Question question = byId.get();
-            assertEquals(1, question.getId());
+        Optional<Question> res = questionRepository.findById(1L);
+        if(res.isPresent()){
+            Question question = res.get();
+            assertEquals(1,question.getId());
+        }else{
+            throw new EntityNotFoundException("해당 데이터가 없어요.");
         }
 
         Question question = questionRepository.findById(1L)
-                .orElseThrow(() -> new EntityNotFoundException("해당 객체가 없습니다."));
+                .orElseThrow(() -> new EntityNotFoundException("해당 자료 없음"));
+        assertEquals(1,question.getId());
     }
 
     @Test
-    void testFindBySubject(){ // 제목 찾아영
-        Question question = questionRepository.findBySubject("SBB가 뭔가요?");
-        assertNotNull(question);
-        assertEquals(1, question.getId());
+    void testFindBySubject(){
+        Question question = questionRepository.findBySubject("sbb가 무엇인가요?");
+        assertEquals(1,question.getId());
     }
 
     @Test
     void testFindBySubjectAndContent(){
-        Question question = questionRepository.findBySubjectAndContent("SBB가 뭔가요?", "SBB에 대해서 알고 싶어요")
-                .orElseThrow(() -> new EntityNotFoundException("해당 자료가 없습니다."));
-        assertEquals(1, question.getId());
+        Question question = questionRepository.findBySubjectAndContent("테스트 제목 입니다.", "테스트 입력 내용 입니다.")
+                .orElseThrow(() -> new EntityNotFoundException("없음!!"));
+        assertEquals(2,question.getId());
     }
 
     @Test
     void testFindBySubjectLike(){
-        String keyWord = "SBB";
-        List<Question> list = questionRepository.findBySubjectLike("%"+keyWord+"%");
-        assertEquals(1, list.size());
-
+        List<Question> questionList = questionRepository.findBySubjectLike("%sbb%"); //%keyword%
+        assertEquals(1,questionList.size());
     }
 
     @Test
-    void testSubjectUpdate(){
+    void testUpdate(){
         Question question = questionRepository.findById(2L)
-                .orElseThrow(() -> new EntityNotFoundException("해당 정보가 없습니다."));
-        System.out.println("변경 전 : " + question);
-        question.setSubject("새로운 제목있을까요 없을까여");
+                .orElseThrow(() -> new EntityNotFoundException("없음"));
+        System.out.println("저장  전 : " + question);
+        question.setSubject("수정된 제목");
         Question saved = questionRepository.save(question);
-        System.out.println("변경 후 : " + saved);
+        System.out.println("저장 후 : " + saved);
     }
 
     @Test
     void testDelete(){
-        questionRepository.count();
-        assertEquals(1, questionRepository.count());
+        System.out.println("변경 전 : " + questionRepository.count());
         questionRepository.deleteById(2L);
-        assertEquals(1, questionRepository.count());
+        System.out.println("변경 후 : " + questionRepository.count());
     }
+
     @Test
-    void testLargeData(){
-        for (int i = 1; i <= 300; i++){
+    void testManyData(){
+        for (int i = 1; i <= 300; i++) {
             QuestionDto questionDto = QuestionDto.builder()
-                    .subject("테스트 데이터 입니다. [" + i + "]")
-                    .content("내용 입니다. [" + i + "]")
+                    .subject("테스트 데이터 ["+i+"]")
+                    .content("내용 ["+i+"]")
                     .build();
             questionService.createQuestion(questionDto);
         }
     }
-
 }

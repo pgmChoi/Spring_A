@@ -4,7 +4,6 @@
 server:
   port: 8080                    # 포트 번호
 
-
 spring:
   application:
     name: SBB
@@ -15,7 +14,9 @@ spring:
 
     livereload:
       enabled: true
-      port: 35729
+
+  thymeleaf:
+    cache: false
 
   ####################################
   # MySQL 설정
@@ -26,13 +27,14 @@ spring:
     username: root
     password: '0000'
 
+
   ####################################
   # JPA 설정
   ####################################
   jpa:
     open-in-view: true      # JPA 영속성 컨텍스트를 뷰까지 유지할지 여부
     hibernate:
-      ddl-auto: update # create, update, ...
+      ddl-auto: update      # create, update, ...
       naming:
         physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy # 카멜케이스를 언더스코어로 변환
     show-sql: true          # SQL 출력 여부
@@ -43,3 +45,9 @@ spring:
   servlet:
     encoding:
       charset: UTF-8        # 인코딩 설정
+
+  security:
+    user:
+      name: test
+      password: test
+      roles: USER

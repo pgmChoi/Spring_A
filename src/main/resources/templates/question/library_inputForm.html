@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<th:block layout:fragment="css">
+    <style>
+        .fieldError{
+            color: #b02a37;
+        }
+    </style>
+</th:block>
+<div layout:fragment="content" class="container my-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">도서 리스트</h4>
+                </div>
+
+                <div class="card-body p-4">
+
+                    <form th:action="@{/question/create}"
+                          th:object="${questionDto}"
+                          method="post">
+
+                        <!-- 제목 -->
+                        <div class="mb-4">
+                            <label for="subject" class="form-label fw-bold">
+                                도서 제목
+                            </label>
+                            <input type="text"
+                                   id="subject"
+                                   name="subject"
+                                   class="form-control"
+                                   placeholder="도서 제목을 입력하세요."
+                                   th:field="*{subject}"
+                            >
+                            <p>도서 제목은 필수 항목입니다.</p>
+                            <p th:if="${#fields.hasErrors('subject')}" th:errors="*{subject}" class="fieldError">error</p>
+                        </div>
+
+                        <!-- 내용 -->
+                        <div class="mb-4">
+                            <label for="player" class="form-label fw-bold">
+                                저자
+                            </label>
+                            <input type="text"
+                                   id="player"
+                                   name="player"
+                                   class="form-control"
+                                   placeholder="저자를 입력하세요."
+                                   th:field="*{player}"
+                            >
+                            <p>저자는 필수 항목입니다.<br>
+                            저자는 2자 이상 30자 이하로 입력하세요.</p>
+                            <p th:if="${#fields.hasErrors('player')}" th:errors="*{player}" class="fieldError">error</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="content" class="form-label fw-bold">
+                                내용
+                            </label>
+                            <textarea id="content"
+                                      name="content"
+                                      class="form-control"
+                                      rows="8"
+                                      th:field="*{detail}"
+                                      placeholder="감상평을 입력하세요."
+                            ></textarea>
+                            <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="fieldError">error</p>
+                        </div>
+
+                        <!-- 저장 버튼 -->
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                리뷰 저장
+                            </button>
+                            <p>감상평은 10자 이상 입력하세요.<br>
+                            감상평은 필수 항목입니다.</p>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+</html>

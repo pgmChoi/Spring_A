@@ -29,6 +29,7 @@ public class Question {
     private String content; // 질문 내용
 
     private LocalDateTime created; // 생성일
+
     //fetch = FetchType.LAZY는 디폴트임
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "question",cascade = CascadeType.ALL)
     private List<Answer> answerList;

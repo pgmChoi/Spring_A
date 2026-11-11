@@ -20,4 +20,6 @@ public class QuestionDto {
     @NotEmpty(message = "내용은 필수 입니다.")
     private String content;
 
+    @NotEmpty(message = "평점")
+    private String star;
 }
