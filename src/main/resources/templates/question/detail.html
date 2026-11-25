@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorate="~{layouts/layout}">
 
 <th:block layout:fragment="css">
@@ -37,6 +38,34 @@
                th:text="${question.content}">
                 내용
             </p>
+
+            <!--질문 작성자 추가-->
+            <div class="d-flex justify-content-end">
+                <div class="badge bg-warning text-dark p-2">
+                    <div class="mb-2">
+                        <span th:if="${question.author != null}"
+                              th:text="${question.author.username}"></span>
+                    </div>
+                    <div th:text="${#temporals.format(question.created, 'yyyy-MM-dd HH:mm')}"></div>
+                </div>
+            </div>
+
+            <!-- 질문 수정 / 삭제 -->
+            <div>
+                <a class="btn btn-sm btn-outline-primary"
+                   th:href="@{|/question/modify/${question.id}|}"
+                    sec:authorize="isAuthenticated()"
+                    th:if="${question.author != null and
+                    #authentication.getPrincipal().getUsername() == question.author.username}"
+                    th:text="수정">
+                </a>
+                <a class="btn btn-sm btn-outline-danger"
+                    sec:authorize="isAuthenticated()"
+                    th:if="${question.author != null and
+                    #authentication.getPrincipal().getUsername() == question.author.username}"
+                    th:text="삭제">
+                </a>
+            </div>
         </div>
     </div>
 
@@ -78,6 +107,33 @@
                        th:text="${answer.content}">
                         답변 내용
                     </p>
+
+                    <!--답변자 추가-->
+                    <div class="d-flex justify-content-end">
+                        <div class="badge bg-info text-dark p-2">
+                            <div class="mb-2">
+                        <span th:if="${answer.author != null}"
+                              th:text="${answer.author.username}"></span>
+                            </div>
+                            <div th:text="${#temporals.format(answer.created, 'yyyy-MM-dd HH:mm')}"></div>
+                        </div>
+                    </div>
+
+                    <!-- 답변 수정 / 삭제 -->
+                    <div>
+                        <a class="btn btn-sm btn-outline-primary"
+                           sec:authorize="isAuthenticated()"
+                           th:if="${answer.author != null and
+                    #authentication.getPrincipal().getUsername() == answer.author.username}"
+                           th:text="수정">
+                        </a>
+                        <a class="btn btn-sm btn-outline-danger"
+                           sec:authorize="isAuthenticated()"
+                           th:if="${answer.author != null and
+                    #authentication.getPrincipal().getUsername() == answer.author.username}"
+                           th:text="삭제">
+                        </a>
+                    </div>
                 </div>
 
             </div>
@@ -101,13 +157,24 @@
                         답변 내용
                     </label>
 
-                    <textarea id="content"
+                    <textarea
+                              sec:authorize="isAnonymous()" disabled
+                              id="content"
                               name="content"
                               class="form-control"
                               rows="8"
                               placeholder="질문에 대한 답변을 입력하세요."
                               th:field="*{content}"
                               ></textarea>
+                    <textarea
+                            sec:authorize="isAuthenticated()"
+                            id="content"
+                            name="content"
+                            class="form-control"
+                            rows="8"
+                            placeholder="질문에 대한 답변을 입력하세요."
+                            th:field="*{content}"
+                    ></textarea>
                     <p th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="fieldError">error</p>
                 </div>
 

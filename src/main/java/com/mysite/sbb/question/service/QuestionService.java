@@ -6,6 +6,7 @@ import com.mysite.sbb.question.dto.QuestionDto;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,18 +38,35 @@ public class QuestionService {
         return question;
     }
 
-    public void createQuestion(QuestionDto questionDto, String username) {
+//    public void createQuestion(QuestionDto questionDto, String username) {
+//
+//        // 로그인한 회원 정보 조회
+//        Member member = memberRepository.findByUsername(username)
+//                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+//
+//        Question question = Question.builder()
+//                .subject(questionDto.getSubject())
+//                .content(questionDto.getContent())
+//                .author(member)
+//                .build();
+//
+//        questionRepository.save(question);
+//    }
 
-        // 로그인한 회원 정보 조회
-        Member member = memberRepository.findByUsername(username)
-                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+    public void createQuestion(QuestionDto questionDto, Member author) {
 
         Question question = Question.builder()
                 .subject(questionDto.getSubject())
                 .content(questionDto.getContent())
-                .author(member)
+                .author(author)
                 .build();
 
+        questionRepository.save(question);
+    }
+
+    public void modifyQuestion(Question question, @Valid QuestionDto questionDto) {
+        question.setSubject(questionDto.getSubject());
+        question.setContent(questionDto.getContent());
         questionRepository.save(question);
     }
 }
