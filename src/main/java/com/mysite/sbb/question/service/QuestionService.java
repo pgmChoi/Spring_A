@@ -1,5 +1,7 @@
 package com.mysite.sbb.question.service;
 
+import com.mysite.sbb.member.entity.Member;
+import com.mysite.sbb.member.repository.MemberRepository;
 import com.mysite.sbb.question.dto.QuestionDto;
 import com.mysite.sbb.question.entity.Question;
 import com.mysite.sbb.question.repository.QuestionRepository;
@@ -20,6 +22,7 @@ import java.util.List;
 public class QuestionService {
     //    @Autowired //자동 객체 생성
     private final QuestionRepository questionRepository; //final 안쓰면 생성자 안생김
+    private final MemberRepository memberRepository;
 
     public Page<Question> getList(int page) {
         //PageRequest pageable = PageRequest.of(page, 10, Sort.Direction.DESC, "created");
@@ -34,12 +37,18 @@ public class QuestionService {
         return question;
     }
 
-    public void createQuestion(QuestionDto questionDto) {
+    public void createQuestion(QuestionDto questionDto, String username) {
+
+        // 로그인한 회원 정보 조회
+        Member member = memberRepository.findByUsername(username)
+                .orElseThrow(() -> new EntityNotFoundException("회원을 찾을 수 없습니다."));
+
         Question question = Question.builder()
                 .subject(questionDto.getSubject())
                 .content(questionDto.getContent())
-                .created(LocalDateTime.now())
+                .author(member)
                 .build();
+
         questionRepository.save(question);
     }
 }

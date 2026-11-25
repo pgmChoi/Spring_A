@@ -35,6 +35,7 @@
                       th:text="${#lists.size(question.answerList)}"
                       class="badge bg-danger"></span>
             </td>
+            <td>작성자</td>
             <!-- created(LocalDateTime)를 년-월-일만 출력 -->
             <td th:text="${#temporals.format(question.created, 'yyyy-MM-dd-HH:mm')}">
                 2026-06-07

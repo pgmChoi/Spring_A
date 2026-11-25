@@ -28,7 +28,6 @@ class AnswerRepositoryTest {
         Answer answer = Answer.builder()
                 .content("저도 잘 몰라요")
                 .question(question)
-                .created(LocalDateTime.now())
                 .build();
         Answer save = answerRepository.save(answer);
         System.out.println("save : " + save);

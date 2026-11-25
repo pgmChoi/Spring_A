@@ -26,7 +26,6 @@ public class AnswerService {
         Answer answer = Answer.builder()
                 .content(answerDto.getContent())
                 .question(question)
-                .created(LocalDateTime.now())
                 .build();
         Answer saved = answerRepository.save(answer);
         log.info("===========> saved answer : {}", saved);

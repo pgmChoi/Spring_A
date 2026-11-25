@@ -46,7 +46,6 @@ class QuestionRepositoryTest {
         Question q2 = Question.builder() //q2처럼 테스트하기
                 .content("테스트 입력 내용 입니다.")
                 .subject("테스트 제목 입니다.")
-                .created(LocalDateTime.now())
                 .build();
         Question saved1 = questionRepository.save(q2); //Alt + Shift + L
         assertEquals("테스트 제목 입니다.",saved1.getSubject());

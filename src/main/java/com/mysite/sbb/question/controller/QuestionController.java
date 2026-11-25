@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,12 +62,20 @@ public class QuestionController {
 //        return "redirect:/question/list";
 //    }
     @PostMapping("/create")
-    public String createQuestion(@Valid QuestionDto questionDto, BindingResult bindingResult){
+    public String createQuestion(@Valid QuestionDto questionDto,
+                                 BindingResult bindingResult){
+
         log.info("=========> questionDto : {}", questionDto);
         if(bindingResult.hasErrors()){
-            return "question/inputForm"; //자동으로 questionDto정보를 가져감
+            return "question/inputForm";
         }
-        questionService.createQuestion(questionDto);
+        // 현재 로그인한 회원 정보 가져오기
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        // 질문 등록
+        questionService.createQuestion(questionDto, username);
+
         return "redirect:/question/list";
     }
 }
